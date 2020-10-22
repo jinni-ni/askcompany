@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import SignupForm
-# Create your views here.
+
+
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
