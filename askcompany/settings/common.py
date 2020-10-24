@@ -143,3 +143,13 @@ INTERNAL_IPS = [
     '127.0.0.1',
     # ...
 ]
+
+#ADMINS =[]
+
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+EMAIL_HOST = 'smtp.sendgird.net'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_HOST = 587
+EMAIL_USE_TLS = True
+
+WELCOME_EMAIL_SENDER = 'ask@ask.com'
