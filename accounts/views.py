@@ -4,10 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, logout_then_login, \
     PasswordChangeView as AuthPasswordChangeView
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 
 from .forms import SignupForm, ProfileForm, PasswordChangeForm
+from .models import User
 
 login = LoginView.as_view(template_name='accounts/login_form.html')
 
@@ -55,3 +56,27 @@ class PasswrodChangeView(LoginRequiredMixin, AuthPasswordChangeView):
         return super().form_valid(form)
 
 password_change = PasswrodChangeView.as_view()
+
+
+@login_required
+def user_follow(request, username):
+    follow_user = get_object_or_404(User, username=username, is_active=True)
+
+    # requeset.user => follow_user 를 팔로우 할려고 합니다.
+    request.user.following_set.add(follow_user)
+    request.user.follower_set.add(request.user)
+
+    messages.success(request, f"{follow_user}님을 팔로우했습니다.")
+    redirect_url = request.META.get("HTTP_REFERER", "root")
+    return redirect(redirect_url)
+
+@login_required
+def user_unfollow(request, username):
+    unfollow_user = get_object_or_404(User, username=username, is_active=True)
+
+    request.user.following_set.remove(unfollow_user)
+    request.user.follower_set.remove(request.user)
+
+    messages.success(request, f"{unfollow_user}님을 언팔로우했습니다.")
+    redirect_url = request.META.get("HTTP_REFERER", "root")
+    return redirect(redirect_url)
