@@ -54,7 +54,6 @@
                 var form_id = "post-{{ post.pk }}-comment-form";
                 $("#" + form_id).submit(function(e) {
                     e.preventDefault();
-
                     var options = {
                         target: "#server-response-{{ post.pk }}",
                         success: function(responseText, statusText, xhr, $form){
